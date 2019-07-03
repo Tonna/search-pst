@@ -1,0 +1,9 @@
+- What is the problem to solve?
+
+  If person has exported emails from MS Outlook he should use MS Outlook to read them. And if there are a lot of pst files, it becomes even more tedios.
+
+- What can we do about it?
+
+  No clear idea yet. There are tools for reading or converting pst file (readpst, apache tika).
+
+  What I will try is to convert bunch of pst files into plain text + attachments with readpst. Then emails will be parsed and put to sqlite file. Later search queries will be performed and I hope performance will be good enough.
