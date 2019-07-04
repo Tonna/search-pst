@@ -24,7 +24,9 @@
 3. /program 1/ reads all data in /folder 2/, parses it and put to /sqlite file/ (why sqlite? simplicity of file, flexibility of sql, hope for good performance)
 4. /program 2/ based on search query makes select from /sqlite file/ and outputs all matching emails and attachments to /output folder/ (separate folder for each query)
 
-Lets make an example
+Lets make an example. We will use Enron data set - it is big (~50 GB) and it is available.
+
+We assume readpst to be in place
 
 #+BEGIN_SRC
 mkdir /tmp/search-pst-test
@@ -33,5 +35,10 @@ cd /tmp/search-pst-test
 mkdir in
 cd in
 curl -O https://s3.amazonaws.com/edrm.download.nuix.com/RevisedEDRMv1/albert_meyers.zip
+unzip albert_meyers.zip
+mv albert_meyers/albert_meyers_000_1_1.pst .
 cd ..
+
+#extracting archive to files
+readpst -S -D -o out in/albert_meyers_000_1_1.pst
 #+END_SRC
