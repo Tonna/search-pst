@@ -1,3 +1,8 @@
+* FAQ
+  :PROPERTIES:
+  :CREATED:  [2019-07-04 Thu 14:12]
+  :CUSTOM_ID: 76ff29ca-c783-40d6-9edf-1eadc3b4d575
+  :END:
 - What is the problem to solve?
 
   If person has exported emails from MS Outlook he should use MS Outlook to read them. And if there are a lot of pst files, it becomes even more tedios.
@@ -7,3 +12,26 @@
   No clear idea yet. There are tools for reading or converting pst file (readpst, apache tika).
 
   What I will try is to convert bunch of pst files into plain text + attachments with readpst. Then emails will be parsed and put to sqlite file. Later search queries will be performed and I hope performance will be good enough.
+
+
+* How it works?
+  :PROPERTIES:
+  :CREATED:  [2019-07-04 Thu 14:13]
+  :CUSTOM_ID: 2d937bb9-199f-4237-8124-5fac6925fcde
+  :END:
+1. user puts pst archives into /folder 1/.
+2. using readpst tool to extract all data to /folder 2/.
+3. /program 1/ reads all data in /folder 2/, parses it and put to /sqlite file/ (why sqlite? simplicity of file, flexibility of sql, hope for good performance)
+4. /program 2/ based on search query makes select from /sqlite file/ and outputs all matching emails and attachments to /output folder/ (separate folder for each query)
+
+Lets make an example
+
+#+BEGIN_SRC
+mkdir /tmp/search-pst-test
+cd /tmp/search-pst-test
+
+mkdir in
+cd in
+curl -O https://s3.amazonaws.com/edrm.download.nuix.com/RevisedEDRMv1/albert_meyers.zip
+cd ..
+#+END_SRC
