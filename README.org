@@ -57,3 +57,12 @@ folder1/folder2/email2-attachment1
 folder1/folder2/email2-attachment2
 folder1/folder3/email1
 #+END_SRC
+
+* Misc
+  :PROPERTIES:
+  :CREATED:  [2019-07-07 Sun 00:11]
+  :CUSTOM_ID: 31eccff8-725e-4f20-92f3-fd5c85364a77
+  :END:
+Building
+
+go build -o reader.so main1.go && gofmt -s -w *.go
