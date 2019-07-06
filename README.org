@@ -42,3 +42,18 @@ cd ..
 #extracting archive to files
 readpst -S -D -o out in/albert_meyers_000_1_1.pst
 #+END_SRC
+
+* Assumptions
+  :PROPERTIES:
+  :CREATED:  [2019-07-06 Sat 22:58]
+  :CUSTOM_ID: 8541713b-b786-424d-a480-9173c33fb632
+  :END:
+readpst exports files in a way that email and attachments are presented as
+
+#+BEGIN_SRC
+folder1/folder2/email1
+folder1/folder2/email2
+folder1/folder2/email2-attachment1
+folder1/folder2/email2-attachment2
+folder1/folder3/email1
+#+END_SRC

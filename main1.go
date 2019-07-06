@@ -1,12 +1,17 @@
 package main
 
 import (
-	"fmt"
-	//"os"
 	"flag"
+	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
 )
 
 func main() {
+
+	//read input dir name and name of output file
+
 	var input string
 	var output string
 	flag.StringVar(&input, "input", "", "directory that contains pst files")
@@ -17,9 +22,27 @@ func main() {
 	fmt.Println("input folder= " + input)
 	fmt.Println("output file= " + output)
 
-	//var toWald Directory
-	//take top dir from set, look what child dirs it has and put to set,
-	//just files should be parsed and put to db
+	if len(input) == 0 || len(output) == 0 {
+		fmt.Println("\ninvalid in/out specified... Exiting")
+		os.Exit(1)
+	}
+
+	visit := func(p string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() {
+			if strings.Contains(info.Name(), "-") {
+				fmt.Println(" ", p, "attachment")
+			} else {
+				fmt.Println(" ", p, "email")
+			}
+		}
+		//fmt.Println(" ", p, info.IsDir(), info.Name())
+		return nil
+	}
+	err := filepath.Walk(input, visit)
+	check(err)
 }
 
 func check(e error) {
