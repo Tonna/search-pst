@@ -64,7 +64,6 @@ func main() {
 	//TODO all logic goes to visit closure. Is it ok?
 	//TODO Add logic to parse email file and create more columns in database
 
-
 	visit := func(p string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -97,7 +96,6 @@ func main() {
 
 		return nil
 	}
-
 
 	err = filepath.Walk(input, visit)
 	check(err)

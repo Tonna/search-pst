@@ -65,4 +65,28 @@ folder1/folder3/email1
   :END:
 Building
 
+#+BEGIN_SRC
 go build -o reader.so main1.go && gofmt -s -w *.go
+go build -o search.so main2.go && gofmt -s -w *.go
+#+END_SRC
+
+* TODO todo-list
+  :PROPERTIES:
+  :CREATED:  [2019-07-23 Tue 20:33]
+  :CUSTOM_ID: 3e21789d-81f4-4c78-b9b7-d95e5e5b751f
+  :END:
+
+** TODO Search accepts SQL queries
+   :PROPERTIES:
+   :CREATED:  [2019-07-23 Tue 20:33]
+   :CUSTOM_ID: 34d60713-6d39-4243-a521-6aeb1f976e02
+   :END:
+
+** TODO Match email and attachment files
+   :PROPERTIES:
+   :CREATED:  [2019-07-23 Tue 20:34]
+   :CUSTOM_ID: 6a67e72c-4ebb-4e14-bb0b-d1fbdf3d3c38
+   :END:
+Every email file that has attachments if found in search should be extracted with attachments.
+
+How and when match emails and attachments? When reading I think. Primary and foreign keys?
