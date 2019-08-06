@@ -88,7 +88,7 @@ func main() {
 				file, err := ioutil.ReadFile(p)
 				check(err)
 
-				_, err = stmtEmail.Exec(p, file)
+				_, err = stmtEmail.Exec(p, string(file))
 				check(err)
 
 			}
