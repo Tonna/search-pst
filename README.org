@@ -5,28 +5,28 @@
   :END:
 - What is the problem to solve?
 
-  If person has exported emails from MS Outlook he should use MS Outlook to read them. And if there are a lot of pst files, it becomes even more tedios.
+  If you have exported emails from MS Outlook, you're also limited to MS Outlook in order to read them. And if there are a lot of pst files, it becomes even more tedios.
 
 - What can we do about it?
 
-  No clear idea yet. There are tools for reading or converting pst file (readpst, apache tika).
+  No clear idea yet. There are tools for reading or converting pst file such as readpst, apache tika.
 
-  What I will try is to convert bunch of pst files into plain text + attachments with readpst. Then emails will be parsed and put to sqlite file. Later search queries will be performed and I hope performance will be good enough.
-
+  Using readpst, I will try to convert a batch of pst files into plain text together with their attachments. Then emails will be parsed and converted to a sqlite file. Any search queries that will subsequently be performed should work well.
 
 * How it works?
   :PROPERTIES:
   :CREATED:  [2019-07-04 Thu 14:13]
   :CUSTOM_ID: 2d937bb9-199f-4237-8124-5fac6925fcde
   :END:
-1. user puts pst archives into /folder 1/.
-2. using readpst tool to extract all data to /folder 2/.
-3. /program 1/ reads all data in /folder 2/, parses it and put to /sqlite file/ (why sqlite? simplicity of file, flexibility of sql, hope for good performance)
-4. /program 2/ based on search query makes select from /sqlite file/ and outputs all matching emails and attachments to /output folder/ (separate folder for each query)
 
-Lets make an example. We will use Enron data set - it is big (~50 GB) and it is available.
+1. User puts the pst archives into /folder 1/.
+2. Using readpst tool, extracts all data to /folder 2/.
+3. /program 1/ reads all data in /folder 2/, parses it and converts it to an /sqlite file/ (why sqlite? Because of its simplicity, flexibility of sql - which should provide better performance.)
+4. /program 2/ , based on a search query, makes selections from the /sqlite file/ and outputs all matching emails and attachments to /output folder/ (separate folder for each query).
 
-We assume readpst to be in place
+Lets try an example. We will use the Enron data set - it's big (~50 GB) and publically available.
+
+Assuming readpst is installed:
 
 #+BEGIN_SRC
 mkdir /tmp/search-pst-test
@@ -93,7 +93,8 @@ go build -o search.so main2.go && gofmt -s -w *.go
    :CREATED:  [2019-07-23 Tue 20:34]
    :CUSTOM_ID: 6a67e72c-4ebb-4e14-bb0b-d1fbdf3d3c38
    :END:
-Every email file that has attachments if found in search should be extracted with attachments.
+
+Every email file that has attachments, if found in search, should be extracted with attachments.
 
 How and when match emails and attachments? When reading I think. Primary and foreign keys?
 
