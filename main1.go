@@ -41,9 +41,15 @@ func main() {
 	sqlStmt := `create table email (path text, content text);
 	            delete from email;
 
-		    create table attachment (path text, content blob);
+		    create table attachment (path text, content blob, email_id integer);
 		    delete from attachment;
+
 		 `
+
+	indexStmt := `	    CREATE INDEX index_attachment_email_id ON attachment (email_id );
+			    CREATE INDEX index_attachment_path ON attachment (path );
+			    CREATE INDEX index_email_path ON email (path );
+		    `
 
 	_, err = db.Exec(sqlStmt)
 	check(err)
@@ -54,7 +60,10 @@ func main() {
 	stmtEmail, err := tx.Prepare("insert into email(path, content) values(?, ?)")
 	check(err)
 
-	stmtAtt, err := tx.Prepare("insert into attachment(path, content) values(?, ?)")
+	//setting email_id with latest email rowid we do get advantage
+	//not running update query later
+	//assuming file system will give us files in order - link right email and attachment
+	stmtAtt, err := tx.Prepare("insert into attachment(path, content, email_id) values(?, ?, (select max(rowid) from email))")
 	check(err)
 
 	defer stmtEmail.Close()
@@ -70,6 +79,11 @@ func main() {
 		}
 		if !info.IsDir() {
 
+			//very lazy way to create with primary key
+			//by removing slashes and whitespaces from file path
+			clearName := strings.Replace(p[len(input)+1:], "/", "_", -1)
+			clearName = strings.Replace(clearName, " ", "", -1)
+
 			//this is naive check, but is acceptable for now
 			if strings.Contains(info.Name(), "-") {
 
@@ -78,7 +92,7 @@ func main() {
 				file, err := ioutil.ReadFile(p)
 				check(err)
 
-				_, err = stmtAtt.Exec(p, file)
+				_, err = stmtAtt.Exec(clearName, file)
 				check(err)
 
 			} else {
@@ -88,7 +102,7 @@ func main() {
 				file, err := ioutil.ReadFile(p)
 				check(err)
 
-				_, err = stmtEmail.Exec(p, string(file))
+				_, err = stmtEmail.Exec(clearName, string(file))
 				check(err)
 
 			}
@@ -101,6 +115,10 @@ func main() {
 	check(err)
 
 	tx.Commit()
+
+	_, err = db.Exec(indexStmt)
+	check(err)
+
 }
 
 func check(e error) {

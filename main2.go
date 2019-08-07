@@ -39,6 +39,7 @@ func main() {
 	err := os.Mkdir(path, 0755)
 	fmt.Println("created output file - " + path)
 
+	//TODO assumption here that query will contain 'SELECT path, content'
 	query, err := ioutil.ReadFile(queryFile)
 	check(err)
 	fmt.Println("query is - " + string(query))
