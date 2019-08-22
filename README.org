@@ -24,23 +24,37 @@
 3. /program 1/ reads all data in /folder 2/, parses it and converts it to an /sqlite file/ (why sqlite? Because of its simplicity, flexibility of sql - which should provide better performance.)
 4. /program 2/ , based on a search query, makes selections from the /sqlite file/ and outputs all matching emails and attachments to /output folder/ (separate folder for each query).
 
-Lets try an example. We will use the Enron data set - it's big (~50 GB) and publically available.
+Lets try an example. We will use part of Enron data set - it's big (~50 GB) and publically available.
 
-Assuming readpst is installed:
+Assuming golang and readpst are installed:
 
 #+BEGIN_SRC
-mkdir /tmp/search-pst-test
-cd /tmp/search-pst-test
+mkdir /tmp/test-pst
+cd /tmp/test-pst
 
-mkdir in
-cd in
 curl -O https://s3.amazonaws.com/edrm.download.nuix.com/RevisedEDRMv1/albert_meyers.zip
 unzip albert_meyers.zip
 mv albert_meyers/albert_meyers_000_1_1.pst .
-cd ..
+rm -fr albert_meyers
+rm albert_meyers.zip
 
 #extracting archive to files
-readpst -S -D -o out in/albert_meyers_000_1_1.pst
+mkdir extract
+readpst -S -D -o extract albert_meyers_000_1_1.pst
+
+git clone https://github.com/tonna/search-pst
+cd search-pst
+
+go get github.com/mattn/go-sqlite3
+go build -o reader.so main1.go && go build -o search.so main2.go
+cd -
+
+./search-pst/reader.so -input=/tmp/test-pst/extract -output=db
+
+mkdir found
+echo "select path, content from email where content like '%1%' limit 5;" > query-dummy.sql
+./search-pst/search.so -input=/tmp/test-pst/db -output=/tmp/test-pst/found -query=query-dummy.sql
+ls /tmp/test-pst/found -R
 #+END_SRC
 
 * Assumptions
@@ -66,6 +80,10 @@ folder1/folder3/email1
 Building
 
 #+BEGIN_SRC
+git clone https://github.com/tonna/search-pst
+
+cd search-pst
+
 #dependency
 go get github.com/mattn/go-sqlite3
 
@@ -83,10 +101,6 @@ go build -o search.so main2.go && gofmt -s -w *.go
    :PROPERTIES:
    :CREATED:  [2019-07-23 Tue 20:33]
    :CUSTOM_ID: 34d60713-6d39-4243-a521-6aeb1f976e02
-   :END:
-   :LOGBOOK:
-   - State "NEXT"       from "DONE"       [2019-08-06 Tue 21:53]
-   - State "DONE"       from "NEXT"       [2019-08-06 Tue 21:53]
    :END:
 ** TODO Match email and attachment files
    :PROPERTIES:
